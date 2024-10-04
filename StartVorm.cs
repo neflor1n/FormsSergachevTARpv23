@@ -10,13 +10,18 @@ namespace FormsSergachevTARpv23
     {   
         List<string> elemendid = new List<string>
         {
-            "Nupp", "Silt", "Pilt", "Märkeruut"
+            "Nupp", "Silt", "Pilt", "Märkeruut", "Raadionupp", "Tekstkast"
         };
+        List<string> rbtn_list = new List<string> { "Üks", "Kaks", "Kolm" };
         TreeView tree;
         Button btn;
         Label lbl;
         PictureBox pic, pic2;
         CheckBox chk1, chk2;
+        RadioButton rbtn1, rbtn2, rbtn3;
+        CheckBox chk4;
+        RadioButton rbtn;
+        TextBox txt;
         public StartVorm()
         {
             this.Height = 500;
@@ -50,8 +55,8 @@ namespace FormsSergachevTARpv23
             lbl = new Label();
             lbl.Text = $"{currentTime}";
             lbl.Font = new Font("Arial", 24, FontStyle.Underline);
-            lbl.Size = new Size(200, 50);
-            lbl.Location = new Point(150, 20);
+            lbl.Size = new Size(400, 50);
+            lbl.Location = new Point(310, 20);
             lbl.MouseHover += Lbl_MouseHover;
             lbl.MouseLeave += Lbl_MouseLeave;
 
@@ -64,8 +69,13 @@ namespace FormsSergachevTARpv23
             pic.DoubleClick += Pic_DoubleClick;
 
 
+            rbtn1 = new RadioButton() { Text = "Valik 1", Location = new Point(150, 330) };
+            rbtn2 = new RadioButton() { Text = "Valik 2", Location = new Point(150, 330) };
+            rbtn3 = new RadioButton() { Text = "Valik 3", Location = new Point(150, 360) };
 
-            
+
+
+
         }
 
 
@@ -158,16 +168,109 @@ namespace FormsSergachevTARpv23
                 Controls.Add(chk1);
                 Controls.Add(chk2);
             }
+            else if (e.Node.Text == "Raadionupp")
+            {
+                chk4 = new CheckBox();
+                chk4.Checked = false;
+                chk4.Text = "Remove Raadiobuttons";
+                chk4.Size = new Size(chk4.Text.Length * 10, chk4.Size.Height);
+                chk4.Location = new Point(280, btn.Height + lbl.Height + pic.Height + 30);
+                rbtn1.Location = new Point(150, btn.Height + lbl.Height + pic.Height + 15);
+                rbtn1.Checked = false;
+                rbtn1.Text = e.Node.Text;
+                rbtn2.Text = e.Node.Text;
+                rbtn2.Checked = false;
+                rbtn3.Checked = false;
+                rbtn3.Text = e.Node.Text;
+
+                rbtn2.Location = new Point(150, btn.Height + lbl.Height + pic.Height + 40);
+                rbtn3.Location = new Point(150, btn.Height + lbl.Height + pic.Height + 65);
+
+                rbtn1.CheckedChanged += Rbtn_CheckedChanged;
+                rbtn3.CheckedChanged += Rbtn_CheckedChanged;
+                rbtn2.CheckedChanged += Rbtn_CheckedChanged;
+                chk4.CheckedChanged += Chk4_CheckedChanged;
+                this.Controls.Add(rbtn1);
+                this.Controls.Add(rbtn2);
+                this.Controls.Add(rbtn3);
+                this.Controls.Add(chk4);
+
+                /*
+                int x = 20;
+                for (int i = 0; i < rbtn_list.Count; i++)
+                {
+                    rbtn = new RadioButton();
+                    rbtn.Checked = false;
+                    rbtn.Text = rbtn_list[i];
+                    rbtn.Height = x;
+                    x = x + 20;
+                    rbtn.Location = new Point(150, btn.Height + lbl.Height + pic.Height + chk1.Height +
+                        chk2.Height + rbtn.Height);
+                    rbtn.CheckedChanged += new EventHandler(Btn_CheckedChanged);
+
+                    Controls.Add(rbtn); 
+                }
+                */
+            }
+            else if (e.Node.Text == "Tekstkast")
+            {
+                txt = new TextBox();
+                txt.Location = new Point(150 + btn.Width + 5, btn.Height + 25);
+                txt.Font = new Font("Arial", 24);
+                txt.Width = 100;
+                txt.TextChanged += Txt_TextChanged;
+                Controls.Add(txt);
+            }
         }
 
-        
+        private void Txt_TextChanged(object? sender, EventArgs e)
+        {
+            lbl.Text = txt.Text;
+        }
 
+        private void Chk4_CheckedChanged(object? sender, EventArgs e)
+        {
+            rbtn1.Visible = !chk4.Checked;
+            rbtn2.Visible = !chk4.Checked;
+            rbtn3.Visible = !chk4.Checked;
+            if (chk4.Checked)
+            {
+               
+                DateTime currentTime = DateTime.Now;
+                lbl.Text = $"{currentTime}";
+            }
+        }
+
+        private void Rbtn_CheckedChanged(object? sender, EventArgs e)
+        {
+
+            if (rbtn1.Checked)
+            {
+                lbl.Text = "Valik 1 on valitud";
+            }
+            else if (rbtn2.Checked)
+            {
+                lbl.Text = "Valik 2 on valitud";
+            }
+            else if (rbtn3.Checked)
+            {
+                lbl.Text = "Valik 3 on valitud";
+            }
+            
+        }
+        /*
+        private void Btn_CheckedChanged(object? sender, EventArgs e)
+        {
+            RadioButton rb = (RadioButton)sender;
+            lbl.Text = rb.Text;
+        }
+        */
         private void Chk_CheckedChanged(object sender, EventArgs e)
         {
             if (chk1.Checked && chk2.Checked)
             {
-
-                this.BackColor = Color.LightGreen;
+                
+                this.BackColor = Color.BlueViolet;
             }
             else if (chk2.Checked)
             {
