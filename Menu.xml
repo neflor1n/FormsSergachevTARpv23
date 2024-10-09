@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<menu>
+  <category name="Appetizers">
+    <item>
+      <name>Bruschetta</name>
+      <description>Grilled bread topped with diced tomatoes, garlic, and basil.</description>
+      <price currency="USD">8.99</price>
+      <options>
+        <option>With cheese</option>
+        <option>Without cheese</option>
+      </options>
+    </item>
+    <item>
+      <name>Stuffed Mushrooms</name>
+      <description>Mushrooms stuffed with a blend of cheeses and herbs.</description>
+      <price currency="USD">9.99</price>
+    </item>
+    <item>
+      <name>Cheese</name>
+      <description>Default Cheese</description>
+      <price currency="USD">1</price>
+    </item>
+    <item>
+      <name>Cheese</name>
+      <description>Default Cheese</description>
+      <price currency="USD">1</price>
+    </item>
+    <item>
+      <name>Apple</name>
+      <description>Default apple</description>
+      <price currency="USD">1</price>
+    </item>
+    <item>
+      <name>Apple</name>
+      <description>D</description>
+      <price currency="USD">2</price>
+    </item>
+  </category>
+  <category name="Main Courses">
+    <item>
+      <name>Grilled Salmon</name>
+      <description>Salmon fillet grilled to perfection, served with seasonal vegetables.</description>
+      <price currency="USD">19.99</price>
+      <options>
+        <option>With lemon butter sauce</option>
+        <option>Without sauce</option>
+      </options>
+    </item>
+    <item>
+      <name>Vegetable Stir Fry</name>
+      <description>A mix of fresh vegetables sautéed in a savory sauce.</description>
+      <price currency="USD">14.99</price>
+    </item>
+    <item>
+      <name>Golden Apple </name>
+      <description>Golden Apple</description>
+      <price currency="USD">2</price>
+    </item>
+  </category>
+  <category name="Desserts">
+    <item>
+      <name>Tiramisu</name>
+      <description>Classic Italian dessert made with coffee-soaked ladyfingers and mascarpone cheese.</description>
+      <price currency="USD">6.99</price>
+    </item>
+    <item>
+      <name>Cheesecake</name>
+      <description>Rich and creamy cheesecake with a graham cracker crust.</description>
+      <price currency="USD">7.99</price>
+    </item>
+  </category>
+  <category name="Beverages">
+    <item>
+      <name>House Wine</name>
+      <description>Red or white wine, served by the glass.</description>
+      <price currency="USD">5.00</price>
+    </item>
+    <item>
+      <name>Craft Beer</name>
+      <description>Selection of local craft beers on tap.</description>
+      <price currency="USD">6.00</price>
+    </item>
+  </category>
+</menu>

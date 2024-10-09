@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data;
+using Microsoft.VisualBasic;
+using System.Xml.Linq;
 
 namespace FormsSergachevTARpv23
 {
@@ -10,7 +13,7 @@ namespace FormsSergachevTARpv23
     {   
         List<string> elemendid = new List<string>
         {
-            "Nupp", "Silt", "Pilt", "Märkeruut", "Raadionupp", "Tekstkast"
+            "Nupp", "Silt", "Pilt", "Märkeruut", "Raadionupp", "Tekstkast", "Loetelu", "Tabel", "DialogiAknad", 
         };
         List<string> rbtn_list = new List<string> { "Üks", "Kaks", "Kolm" };
         TreeView tree;
@@ -22,6 +25,9 @@ namespace FormsSergachevTARpv23
         CheckBox chk4;
         RadioButton rbtn;
         TextBox txt;
+        ListBox lb;
+        DataSet ds;
+        DataGridView dg;
         public StartVorm()
         {
             this.Height = 500;
@@ -62,7 +68,7 @@ namespace FormsSergachevTARpv23
 
 
             pic = new PictureBox();
-            pic.Size = new Size(150, 150);
+            pic.Size = new Size(140, 140);
             pic.Location = new Point(150, btn.Height+lbl.Height + 10);
             pic.SizeMode = PictureBoxSizeMode.Zoom;
             pic.Image = Image.FromFile(@"..\..\..\tower.jpg");
@@ -128,6 +134,9 @@ namespace FormsSergachevTARpv23
             {
                 btn.BackColor = Color.Red;
             }
+            
+
+            
         }
       
         private void Tree_AfterSelect(object? sender, TreeViewEventArgs e)
@@ -174,8 +183,8 @@ namespace FormsSergachevTARpv23
                 chk4.Checked = false;
                 chk4.Text = "Remove Raadiobuttons";
                 chk4.Size = new Size(chk4.Text.Length * 10, chk4.Size.Height);
-                chk4.Location = new Point(280, btn.Height + lbl.Height + pic.Height + 30);
-                rbtn1.Location = new Point(150, btn.Height + lbl.Height + pic.Height + 15);
+                chk4.Location = new Point(450, btn.Height + lbl.Height + pic.Height + 50);
+                rbtn1.Location = new Point(300, btn.Height + lbl.Height + pic.Height + 15);
                 rbtn1.Checked = false;
                 rbtn1.Text = e.Node.Text;
                 rbtn2.Text = e.Node.Text;
@@ -183,8 +192,8 @@ namespace FormsSergachevTARpv23
                 rbtn3.Checked = false;
                 rbtn3.Text = e.Node.Text;
 
-                rbtn2.Location = new Point(150, btn.Height + lbl.Height + pic.Height + 40);
-                rbtn3.Location = new Point(150, btn.Height + lbl.Height + pic.Height + 65);
+                rbtn2.Location = new Point(300, btn.Height + lbl.Height + pic.Height + 40);
+                rbtn3.Location = new Point(300, btn.Height + lbl.Height + pic.Height + 65);
 
                 rbtn1.CheckedChanged += Rbtn_CheckedChanged;
                 rbtn3.CheckedChanged += Rbtn_CheckedChanged;
@@ -221,6 +230,104 @@ namespace FormsSergachevTARpv23
                 txt.TextChanged += Txt_TextChanged;
                 Controls.Add(txt);
             }
+            else if (e.Node.Text == "Loetelu" )
+            {
+                lb = new ListBox();
+                foreach(string item in rbtn_list)
+                {
+                    lb.Items.Add(item);
+                }
+                lb.Location = new Point(160 + btn.Width + txt.Width, btn.Height + 20);
+                lb.SelectedIndexChanged += Lb_SelectedIndexChanged;
+                Controls.Add(lb);
+            }
+            else if (e.Node.Text == "Tabel")
+            {
+                ds = new DataSet("XML fail");
+                ds.ReadXml (@"..\..\..\Menu.xml");
+                dg = new DataGridView();
+                dg.Location = new Point(150 + pic.Width + lb.Width, rbtn3.Height + 300);
+                dg.DataSource = ds;
+                dg.DataMember = "item";
+                dg.RowHeaderMouseClick += Dg_DataMemberChanged;
+                Controls.Add(dg);
+            }
+            else if (e.Node.Text == "DialogiAknad")
+            {
+                var vastus = MessageBox.Show("Sisestame andmed", "Kas tahad sisestada uut elementi XML faili?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                
+                if (vastus == DialogResult.Yes)
+                {
+                    string name = Interaction.InputBox("Sisesta toote nimi", "Toote Nimi");
+                    string description = Interaction.InputBox("Sisesta toote kirjeldus", "Toote kirjeldus");
+                    string priceInput = Interaction.InputBox("Sisesta toote hind", "Toote hind");
+                    decimal price;
+
+                    if (!decimal.TryParse(priceInput, out price))
+                    {
+                        MessageBox.Show("Vale hind. Palun sisesta numbriline väärtus!");
+                        return;
+
+                    }
+                    AddItemToXml(name, description, price);
+
+                    LoadMenuData();
+                }
+
+            }
+        }
+
+        private void AddItemToXml(string name, string description, decimal price)
+        {
+            XDocument menuXml = XDocument.Load(@"..\..\..\Menu.xml");
+
+            var category = menuXml.Descendants("category").First(c => c.Attribute("name").Value == "Appetizers");
+            if (category != null)
+            {
+                // Создаю новый объект 
+                XElement newItem = new XElement("item",
+                    new XElement("name", name),
+                    new XElement("description", description),
+                    new XElement("price", price, new XAttribute("currency", "USD"))
+                );
+
+                // Добавляю объект в категорию
+                category.Add(newItem);
+
+                // Сохраняю в xml файл
+                menuXml.Save(@"..\..\..\Menu.xml");
+            }
+            else
+            {
+                MessageBox.Show("Kategooriat ei leitud!");
+            }
+        }
+            
+        private void LoadMenuData ()
+        {
+            ds.Clear();
+            ds.ReadXml(@"..\..\..\Menu.xml");
+            dg.DataSource = ds;
+            dg.DataMember = "item";
+        }
+
+        private void Dg_DataMemberChanged(object? sender, DataGridViewCellMouseEventArgs e)
+        {
+            txt.Text = dg.Rows[e.RowIndex].Cells[0].Value.ToString() + " hind " + dg.Rows[e.RowIndex].Cells[1].Value.ToString();
+        }
+
+        private void Lb_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            switch (lb.SelectedIndex)
+            {
+                case 0:
+                    tree.BackColor = Color.Brown; break;
+                case 1:
+                    tree.BackColor= Color.Green; break;
+                case 2:
+                    tree.BackColor = Color.Magenta; break;
+
+            }
         }
 
         private void Txt_TextChanged(object? sender, EventArgs e)
@@ -247,10 +354,80 @@ namespace FormsSergachevTARpv23
             if (rbtn1.Checked)
             {
                 lbl.Text = "Valik 1 on valitud";
+
+                int w = 700;
+                int h = 600;
+                var aken = MessageBox.Show("Vali akna suurus", "Kas soovite määrata oma akna suuruse?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (aken == DialogResult.Yes)
+                {
+                    string wi = Interaction.InputBox("Sisestage akna laius");
+                    if (string.IsNullOrWhiteSpace(wi))
+                    {
+                        MessageBox.Show("Palun sisestage laius");
+                        return;
+                    }
+
+                    string he = Interaction.InputBox("Sisestage akna kõrgus");
+                    if (string.IsNullOrWhiteSpace(he))
+                    {
+                        MessageBox.Show("Palun sisestage kõrgus");
+                        return;
+                    }
+
+                    if (!int.TryParse(wi, out w))
+                    {
+                        MessageBox.Show("Laius peab olema number.");
+                        return;
+                    }
+
+                    if (!int.TryParse(he, out h))
+                    {
+                        MessageBox.Show("Kõrgus peab olema number.");
+                        return;
+                    }
+                }
+
+                TeineVorm teineVorm = new TeineVorm(w, h);
+                teineVorm.Show();
             }
             else if (rbtn2.Checked)
             {
                 lbl.Text = "Valik 2 on valitud";
+                int w = 700;
+                int h = 600;
+                var aken = MessageBox.Show("Vali akna suurus", "Kas sa soovite määrata oma akna suurus?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (aken == DialogResult.Yes)
+                {
+                    string wi = Interaction.InputBox("Sisestage akna laius");
+                    if (string.IsNullOrWhiteSpace(wi))
+                    {
+                        MessageBox.Show("Palun sisestage laius");
+                        return;
+
+                    }
+                    string he = Interaction.InputBox("Sisestage akna kõrgus");
+                    if(string.IsNullOrWhiteSpace(he))
+                    {
+                        MessageBox.Show("Palun sisestage kõrgus");
+                        return;
+                    }
+
+                    if (!int.TryParse(wi, out w))
+                    {
+                        MessageBox.Show("Laius peab olema number.");
+                        return;
+
+                    }
+                    if (!int.TryParse(he, out h))
+                    {
+                        MessageBox.Show("Kõrgus peab olema number.");
+                        return;
+                    }
+
+                }
+                KolmasVorm kolmasVorm = new KolmasVorm(w, h);
+                kolmasVorm.Show();
+
             }
             else if (rbtn3.Checked)
             {
