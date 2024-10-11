@@ -1,46 +1,222 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using System.Timers;
-using Timer = System.Timers.Timer;
-using System.Reflection.Metadata.Ecma335;
 
 namespace FormsSergachevTARpv23
 {
     public partial class KolmasVorm : Form
     {
-        Label lb, plusLeftLb, plusRightLb;
-        TextBox tx;
-        Timer tmr;
+        Random randomizer = new Random();
+
+        Label plusLeftLabel, plusRightLabel, minusLeftLabel, minusRightLabel,
+            timesLeftLabel, timesRightLabel, dividedLeftLabel, dividedRightLabel,
+            plusSign, minusSign, timesSign, dividedSign, equals1, equals2, equals3, equals4, timeLabel;
+
+        NumericUpDown sum, difference, product, quotient;
+        System.Windows.Forms.Timer timer1; 
+        Button startButton;
         int timeLeft;
-        
+
+        int addend1, addend2;  // Addition
+        int minuend, subtrahend;  // Subtraction
+        int multiplicand, multiplier;  // Multiplication
+        int dividend, divisor;  // Division
+
         public KolmasVorm(int w, int h)
         {
             this.Width = w;
             this.Height = h;
             this.Text = "Math Quiz";
+
+            plusLeftLabel = new Label();
+            plusRightLabel = new Label();
+            minusLeftLabel = new Label();
+            minusRightLabel = new Label();
+            timesLeftLabel = new Label();
+            timesRightLabel = new Label();
+            dividedLeftLabel = new Label();
+            dividedRightLabel = new Label();
+
+            sum = new NumericUpDown();
+            difference = new NumericUpDown();
+            product = new NumericUpDown();
+            quotient = new NumericUpDown();
+            timeLabel = new Label();
+
+            plusSign = new Label();
+            minusSign = new Label();
+            timesSign = new Label();
+            dividedSign = new Label();
+            equals1 = new Label();
+            equals2 = new Label();
+            equals3 = new Label();
+            equals4 = new Label();
+
+            plusSign.Text = "+";
+            minusSign.Text = "-";
+            timesSign.Text = "×";
+            dividedSign.Text = "÷";
+            equals1.Text = "=";
+            equals2.Text = "=";
+            equals3.Text = "=";
+            equals4.Text = "=";
+
+            plusLeftLabel.Location = new Point(50, 50);
+            plusLeftLabel.Font = new Font("Arial", 16);
+            plusLeftLabel.Size = new Size(40, 40);
+            plusRightLabel.Location = new Point(180, 50);
+            plusRightLabel.Font = new Font("Arial", 16);
+            plusRightLabel.Size = new Size(40, 40);
+            plusSign.Location = new Point(135, 50);
+            plusSign.Size = new Size(30, 30);
+            equals1.Location = new Point(280, 50);
+            equals1.Size = new Size(20, 20);
+            sum.Location = new Point(350, 50);
             
 
-            lb = new Label();
-            lb.Location = new Point(150, 0);
-            lb.Text = "Time Left:";
-            lb.Font = new Font("Arial", 28, FontStyle.Bold);
-            lb.Size = new Size(250, 75);
-            this.Controls.Add(lb);
+            minusLeftLabel.Location = new Point(50, 90);
+            minusLeftLabel.Size = new Size(40, 40);
+            minusLeftLabel.Font = new Font("Arial", 16);
+            minusRightLabel.Location = new Point(180, 90);
+            minusRightLabel.Size = new Size(40, 40);
+            minusRightLabel.Font = new Font("Arial", 16);
+            minusSign.Location = new Point(135, 90);
+            minusSign.Size = new Size(30, 30);
+            equals2.Location = new Point(280, 90);
+            equals2.Size = new Size(20, 20);
+            difference.Location = new Point(350, 90);
 
-            tx = new TextBox();
-            tx.Location = new Point(440, 15);
-            tx.AutoSize = false;
-            tx.TextAlign = HorizontalAlignment.Center;
-            tx.BorderStyle = BorderStyle.FixedSingle;
-            this.Controls.Add(tx);
+            timesLeftLabel.Location = new Point(50, 130);
+            timesRightLabel.Location = new Point(150, 130);
+            timesSign.Location = new Point(120, 130);
+            equals3.Location = new Point(280, 130);
+            equals3.Size = new Size(20, 20);
+            product.Location = new Point(350, 130);
 
-            /*
-            Timer tmr = new Timer();
-            tmr.Interval = 1000;
-            tmr.Tick
-            */
+            dividedLeftLabel.Location = new Point(50, 170);
+            dividedRightLabel.Location = new Point(150, 170);
+            dividedSign.Location = new Point(120, 170);
+            equals4.Location = new Point(280, 170);
+            equals4.Size = new Size(20, 20);
+            quotient.Location = new Point(350, 170);
 
+            timeLabel.Location = new Point(300, 10);
+            timeLabel.Size = new Size(200, 30);
+            timeLabel.Text = "Time Left: ";
+
+            this.Controls.Add(plusLeftLabel);
+            this.Controls.Add(plusRightLabel);
+            this.Controls.Add(plusSign);
+            this.Controls.Add(equals1);
+            this.Controls.Add(sum);
+
+            this.Controls.Add(minusLeftLabel);
+            this.Controls.Add(minusRightLabel);
+            this.Controls.Add(minusSign);
+            this.Controls.Add(equals2);
+            this.Controls.Add(difference);
+
+            this.Controls.Add(timesLeftLabel);
+            this.Controls.Add(timesRightLabel);
+            this.Controls.Add(timesSign);
+            this.Controls.Add(equals3);
+            this.Controls.Add(product);
+
+            this.Controls.Add(dividedLeftLabel);
+            this.Controls.Add(dividedRightLabel);
+            this.Controls.Add(dividedSign);
+            this.Controls.Add(equals4);
+            this.Controls.Add(quotient);
+
+            this.Controls.Add(timeLabel);
+
+            startButton = new Button();
+            startButton.Text = "Start the quiz";
+            startButton.Location = new Point(100, 210);
+            startButton.Size = new Size(100, 20);
+            startButton.Click += new EventHandler(StartButton_Click);
+            this.Controls.Add(startButton);
+
+            timer1 = new System.Windows.Forms.Timer(); 
+            timer1.Tick += new EventHandler(timer1_Tick);
+        }
+
+        // Обработчик события нажатия на кнопку
+        private void StartButton_Click(object sender, EventArgs e)
+        {
+            StartTheQuiz();
+        }
+
+        public void StartTheQuiz()
+        {
+            timeLeft = 30;
+            timeLabel.Text = "30 seconds";
+            timer1.Start();
+
+            // Addition
+            addend1 = randomizer.Next(51);
+            addend2 = randomizer.Next(51);
+            plusLeftLabel.Text = addend1.ToString();
+            plusRightLabel.Text = addend2.ToString();
+            sum.Value = 0;
+
+            // Subtraction
+            minuend = randomizer.Next(1, 101);
+            subtrahend = randomizer.Next(1, minuend);
+            minusLeftLabel.Text = minuend.ToString();
+            minusRightLabel.Text = subtrahend.ToString();
+            difference.Value = 0;
+
+            // Multiplication
+            multiplicand = randomizer.Next(2, 11);
+            multiplier = randomizer.Next(2, 11);
+            timesLeftLabel.Text = multiplicand.ToString();
+            timesRightLabel.Text = multiplier.ToString();
+            product.Value = 0;
+
+            // Division
+            divisor = randomizer.Next(1, 11);
+            int temporaryQuotient = randomizer.Next(2, 11);
+            dividend = divisor * temporaryQuotient;
+
+            dividedLeftLabel.Text = dividend.ToString();
+            dividedRightLabel.Text = divisor.ToString();
+            quotient.Value = 0;
+        }
+
+        private bool CheckTheAnswer()
+        {
+            // Проверяем ответы пользователя на правильность
+            return (addend1 + addend2 == sum.Value)
+                && (minuend - subtrahend == difference.Value)
+                && (multiplicand * multiplier == product.Value)
+                && (dividend / divisor == quotient.Value);
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (CheckTheAnswer())
+            {
+                timer1.Stop();
+                MessageBox.Show("You got all the answers right!", "Congratulations!");
+                startButton.Enabled = true;
+            }
+            else if (timeLeft > 0)
+            {
+                timeLeft--;
+                timeLabel.Text = timeLeft + " seconds";
+            }
+            else
+            {
+                timer1.Stop();
+                timeLabel.Text = "Time's up!";
+                MessageBox.Show("You didn't finish in time.", "Sorry!");
+                sum.Value = addend1 + addend2;
+                difference.Value = minuend - subtrahend;
+                product.Value = multiplicand * multiplier;
+                quotient.Value = dividend / divisor;
+                startButton.Enabled = true;
+            }
         }
     }
 }
