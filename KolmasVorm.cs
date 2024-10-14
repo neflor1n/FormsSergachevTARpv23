@@ -13,14 +13,15 @@ namespace FormsSergachevTARpv23
             plusSign, minusSign, timesSign, dividedSign, equals1, equals2, equals3, equals4, timeLabel;
 
         NumericUpDown sum, difference, product, quotient;
-        System.Windows.Forms.Timer timer1; 
-        Button startButton;
+        System.Windows.Forms.Timer timer1;
+        Button startButton, finishButton;
         int timeLeft;
 
         int addend1, addend2;  // Addition
         int minuend, subtrahend;  // Subtraction
         int multiplicand, multiplier;  // Multiplication
         int dividend, divisor;  // Division
+
 
         public KolmasVorm(int w, int h)
         {
@@ -64,44 +65,73 @@ namespace FormsSergachevTARpv23
             plusLeftLabel.Location = new Point(50, 50);
             plusLeftLabel.Font = new Font("Arial", 16);
             plusLeftLabel.Size = new Size(40, 40);
+
             plusRightLabel.Location = new Point(180, 50);
             plusRightLabel.Font = new Font("Arial", 16);
             plusRightLabel.Size = new Size(40, 40);
+
             plusSign.Location = new Point(135, 50);
             plusSign.Size = new Size(30, 30);
+
             equals1.Location = new Point(280, 50);
             equals1.Size = new Size(20, 20);
             sum.Location = new Point(350, 50);
-            
+
+
 
             minusLeftLabel.Location = new Point(50, 90);
             minusLeftLabel.Size = new Size(40, 40);
             minusLeftLabel.Font = new Font("Arial", 16);
+
             minusRightLabel.Location = new Point(180, 90);
             minusRightLabel.Size = new Size(40, 40);
             minusRightLabel.Font = new Font("Arial", 16);
+
             minusSign.Location = new Point(135, 90);
             minusSign.Size = new Size(30, 30);
+
             equals2.Location = new Point(280, 90);
             equals2.Size = new Size(20, 20);
             difference.Location = new Point(350, 90);
 
+
+
             timesLeftLabel.Location = new Point(50, 130);
-            timesRightLabel.Location = new Point(150, 130);
-            timesSign.Location = new Point(120, 130);
+            timesRightLabel.Location = new Point(180, 130);
+
+            timesRightLabel.Size = new Size(40, 40);
+            timesLeftLabel.Size = new Size(40, 40);
+
+            timesLeftLabel.Font = new Font("Arial", 16);
+            timesRightLabel.Font = new Font("Arial", 16);
+
+            timesSign.Location = new Point(135, 130);
+            timesSign.Size = new Size(30, 30);
+
             equals3.Location = new Point(280, 130);
             equals3.Size = new Size(20, 20);
+
             product.Location = new Point(350, 130);
 
+
             dividedLeftLabel.Location = new Point(50, 170);
-            dividedRightLabel.Location = new Point(150, 170);
-            dividedSign.Location = new Point(120, 170);
+            dividedRightLabel.Location = new Point(180, 170);
+
+            dividedRightLabel.Font = new Font("Arial", 16);
+            dividedLeftLabel.Font = new Font("Arial", 16);
+
+            dividedLeftLabel.Size = new Size(40, 40);
+            dividedRightLabel.Size = new Size(40, 40);
+
+            dividedSign.Location = new Point(135, 170);
+            dividedSign.Size = new Size(40, 40);
             equals4.Location = new Point(280, 170);
             equals4.Size = new Size(20, 20);
             quotient.Location = new Point(350, 170);
 
             timeLabel.Location = new Point(300, 10);
             timeLabel.Size = new Size(200, 30);
+            timeLabel.Font = new Font("Arial", 16);
             timeLabel.Text = "Time Left: ";
 
             this.Controls.Add(plusLeftLabel);
@@ -137,11 +167,17 @@ namespace FormsSergachevTARpv23
             startButton.Click += new EventHandler(StartButton_Click);
             this.Controls.Add(startButton);
 
-            timer1 = new System.Windows.Forms.Timer(); 
+            finishButton = new Button();
+            finishButton.Text = "Завершить тест";
+            finishButton.Location = new Point(220, 210);
+            finishButton.Size = new Size(100, 20);
+            finishButton.Click += new EventHandler(FinishButton_Click);
+            this.Controls.Add(finishButton);
+
+            timer1 = new System.Windows.Forms.Timer();
             timer1.Tick += new EventHandler(timer1_Tick);
         }
 
-        // Обработчик события нажатия на кнопку
         private void StartButton_Click(object sender, EventArgs e)
         {
             StartTheQuiz();
@@ -151,6 +187,7 @@ namespace FormsSergachevTARpv23
         {
             timeLeft = 30;
             timeLabel.Text = "30 seconds";
+            timer1.Interval = 1000;
             timer1.Start();
 
             // Addition
@@ -195,28 +232,46 @@ namespace FormsSergachevTARpv23
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (CheckTheAnswer())
-            {
-                timer1.Stop();
-                MessageBox.Show("You got all the answers right!", "Congratulations!");
-                startButton.Enabled = true;
-            }
-            else if (timeLeft > 0)
+            if (timeLeft > 0)
             {
                 timeLeft--;
-                timeLabel.Text = timeLeft + " seconds";
+                timeLabel.Text = timeLeft + " " + "seconds";
             }
             else
             {
                 timer1.Stop();
-                timeLabel.Text = "Time's up!";
-                MessageBox.Show("You didn't finish in time.", "Sorry!");
-                sum.Value = addend1 + addend2;
-                difference.Value = minuend - subtrahend;
-                product.Value = multiplicand * multiplier;
-                quotient.Value = dividend / divisor;
+                timeLabel.Text = "Aeg on läbi!";
+                MessageBox.Show("Teil ei olnud aega testi täita. Vabandust!");
+                ShowCorrectAnswers();
                 startButton.Enabled = true;
+                finishButton.Enabled = false;
             }
+
+        }
+        private void FinishButton_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
+
+            if (CheckTheAnswer())
+            {
+                MessageBox.Show("Vastasite kõigile küsimustele õigesti!", "Palju õnne!");
+            }
+            else
+            {
+                MessageBox.Show("On valesid vastuseid.", "Kontrolli oma vastuseid!");
+                ShowCorrectAnswers();
+            }
+
+            startButton.Enabled = true;
+            finishButton.Enabled = false;
+        }
+
+        private void ShowCorrectAnswers()
+        {
+            sum.Value = addend1 + addend2;
+            difference.Value = minuend - subtrahend;
+            product.Value = multiplicand * multiplier;
+            quotient.Value = dividend / divisor;
         }
     }
 }

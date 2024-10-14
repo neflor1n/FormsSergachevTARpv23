@@ -28,6 +28,7 @@ namespace FormsSergachevTARpv23
         ListBox lb;
         DataSet ds;
         DataGridView dg;
+        MenuStrip ms;
         public StartVorm()
         {
             this.Height = 500;
@@ -75,6 +76,17 @@ namespace FormsSergachevTARpv23
             pic.DoubleClick += Pic_DoubleClick;
 
 
+            MenuStrip ms = new MenuStrip(); 
+            ToolStripMenuItem windowsMenu = new ToolStripMenuItem("Window");
+            ToolStripMenuItem windowColorMenu = new ToolStripMenuItem("Change window color", null, new EventHandler(windowColorMenu_Click)); 
+            ToolStripMenuItem windowCloseMenu = new ToolStripMenuItem("Close", null, new EventHandler(windowCloseMenu_Click));
+            windowsMenu.DropDownItems.Add(windowColorMenu);
+            windowsMenu.DropDownItems.Add(windowCloseMenu);
+            ms.Items.Add(windowsMenu);
+            ms.Dock = DockStyle.Top;
+            MainMenuStrip = ms;
+            Controls.Add(ms);
+
             rbtn1 = new RadioButton() { Text = "Valik 1", Location = new Point(150, 330) };
             rbtn2 = new RadioButton() { Text = "Valik 2", Location = new Point(150, 330) };
             rbtn3 = new RadioButton() { Text = "Valik 3", Location = new Point(150, 360) };
@@ -84,7 +96,22 @@ namespace FormsSergachevTARpv23
 
         }
 
+        private void windowCloseMenu_Click(object? sender, EventArgs e)
+        {
+            this.Close();
+        }
 
+        private void windowColorMenu_Click(object? sender, EventArgs e)
+        { 
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                this.BackColor = cd.Color;
+            }
+
+        }
 
         /*
         int tt = 0;
@@ -186,11 +213,11 @@ namespace FormsSergachevTARpv23
                 chk4.Location = new Point(450, btn.Height + lbl.Height + pic.Height + 50);
                 rbtn1.Location = new Point(300, btn.Height + lbl.Height + pic.Height + 15);
                 rbtn1.Checked = false;
-                rbtn1.Text = e.Node.Text;
-                rbtn2.Text = e.Node.Text;
+                rbtn1.Text = "Picture viewer";
+                rbtn2.Text = "Matemaatika viktoriin";
                 rbtn2.Checked = false;
                 rbtn3.Checked = false;
-                rbtn3.Text = e.Node.Text;
+                rbtn3.Text = "Game";
 
                 rbtn2.Location = new Point(300, btn.Height + lbl.Height + pic.Height + 40);
                 rbtn3.Location = new Point(300, btn.Height + lbl.Height + pic.Height + 65);
@@ -432,6 +459,40 @@ namespace FormsSergachevTARpv23
             else if (rbtn3.Checked)
             {
                 lbl.Text = "Valik 3 on valitud";
+                int w = 700;
+                int h = 600;
+                var aken = MessageBox.Show("Vali akna suurus", "Kas sa soovite määrata oma akna suurus?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (aken == DialogResult.Yes)
+                {
+                    string wi = Interaction.InputBox("Sisestage akna laius");
+                    if (string.IsNullOrWhiteSpace(wi))
+                    {
+                        MessageBox.Show("Palun sisestage laius");
+                        return;
+
+                    }
+                    string he = Interaction.InputBox("Sisestage akna kõrgus");
+                    if (string.IsNullOrWhiteSpace(he))
+                    {
+                        MessageBox.Show("Palun sisestage kõrgus");
+                        return;
+                    }
+
+                    if (!int.TryParse(wi, out w))
+                    {
+                        MessageBox.Show("Laius peab olema number.");
+                        return;
+
+                    }
+                    if (!int.TryParse(he, out h))
+                    {
+                        MessageBox.Show("Kõrgus peab olema number.");
+                        return;
+                    }
+
+                }
+                NeljasVorm neljasVorm = new NeljasVorm(w, h);
+                neljasVorm.Show();
             }
             
         }
