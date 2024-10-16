@@ -22,7 +22,10 @@ namespace FormsSergachevTARpv23
         int multiplicand, multiplier;  // Multiplication
         int dividend, divisor;  // Division
 
+        int correctAnswers = 0;  // Счетчик правильных ответов
+        int incorrectAnswers = 0; // Счетчик неправильных ответов
 
+        Label correctLabel, incorrectLabel;
         public KolmasVorm(int w, int h)
         {
             this.Width = w;
@@ -62,6 +65,13 @@ namespace FormsSergachevTARpv23
             equals3.Text = "=";
             equals4.Text = "=";
 
+
+            correctLabel = new Label();
+            incorrectLabel = new Label();
+            
+
+
+
             plusLeftLabel.Location = new Point(50, 50);
             plusLeftLabel.Font = new Font("Arial", 16);
             plusLeftLabel.Size = new Size(40, 40);
@@ -76,6 +86,10 @@ namespace FormsSergachevTARpv23
             equals1.Location = new Point(280, 50);
             equals1.Size = new Size(20, 20);
             sum.Location = new Point(350, 50);
+
+
+
+
 
 
 
@@ -160,6 +174,19 @@ namespace FormsSergachevTARpv23
 
             this.Controls.Add(timeLabel);
 
+
+
+            correctLabel.Location = new Point(50, 250); 
+            correctLabel.Size = new Size(200, 30);
+            correctLabel.Text = "Правильные ответы: 0";
+
+            incorrectLabel.Location = new Point(50, 290); 
+            incorrectLabel.Size = new Size(200, 30);
+            incorrectLabel.Text = "Неправильные ответы: 0";
+
+            this.Controls.Add(correctLabel);
+            this.Controls.Add(incorrectLabel);
+
             startButton = new Button();
             startButton.Text = "Start the quiz";
             startButton.Location = new Point(100, 210);
@@ -185,6 +212,12 @@ namespace FormsSergachevTARpv23
 
         public void StartTheQuiz()
         {
+
+            correctAnswers = 0;
+            incorrectAnswers = 0;
+            UpdateAnswerLabels();
+
+
             timeLeft = 30;
             timeLabel.Text = "30 seconds";
             timer1.Interval = 1000;
@@ -223,11 +256,43 @@ namespace FormsSergachevTARpv23
 
         private bool CheckTheAnswer()
         {
-            // Проверяем ответы пользователя на правильность
-            return (addend1 + addend2 == sum.Value)
-                && (minuend - subtrahend == difference.Value)
-                && (multiplicand * multiplier == product.Value)
-                && (dividend / divisor == quotient.Value);
+            bool allCorrect = true;
+
+            // Проверяем ответы пользователя на правильность и обновляем счетчики
+            if (addend1 + addend2 == sum.Value)
+                correctAnswers++;
+            else
+            {
+                incorrectAnswers++;
+                allCorrect = false;
+            }
+
+            if (minuend - subtrahend == difference.Value)
+                correctAnswers++;
+            else
+            {
+                incorrectAnswers++;
+                allCorrect = false;
+            }
+
+            if (multiplicand * multiplier == product.Value)
+                correctAnswers++;
+            else
+            {
+                incorrectAnswers++;
+                allCorrect = false;
+            }
+
+            if (dividend / divisor == quotient.Value)
+                correctAnswers++;
+            else
+            {
+                incorrectAnswers++;
+                allCorrect = false;
+            }
+
+            UpdateAnswerLabels();
+            return allCorrect;
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -248,6 +313,20 @@ namespace FormsSergachevTARpv23
             }
 
         }
+
+
+
+
+
+        private void UpdateAnswerLabels()
+        {
+            correctLabel.Text = $"Правильные ответы: {correctAnswers}";
+            incorrectLabel.Text = $"Неправильные ответы: {incorrectAnswers}";
+        }
+
+       
+
+
         private void FinishButton_Click(object sender, EventArgs e)
         {
             timer1.Stop();

@@ -1,11 +1,17 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace FormsSergachevTARpv23
 {
-    public partial class NeljasVorm : Form
+    public partial class esimeneGame : Form
     {
         TableLayoutPanel tableLayoutPanel;
         Button[] buttons;
@@ -17,10 +23,10 @@ namespace FormsSergachevTARpv23
         MenuStrip ms;
         System.Windows.Forms.Timer timer;
         Label timerLabel;
-        int remainingTime = 60; // Отсчет
-        bool gameStarted = false; // отслеживания начала игры
+        int remainingTime = 20; // Отсчет
+        bool gameStarted = false; // Отслеживание начала игры
 
-        public NeljasVorm(int w, int h)
+        public esimeneGame(int w, int h)
         {
             this.Width = w;
             this.Height = h;
@@ -61,7 +67,7 @@ namespace FormsSergachevTARpv23
             timerLabel.Dock = DockStyle.Fill;
             timerLabel.Font = new Font("Arial", 14, FontStyle.Bold);
             timerLabel.TextAlign = ContentAlignment.MiddleCenter;
-            timerLabel.Text = $"Time: {remainingTime}s"; // Начало с 60 секунд
+            timerLabel.Text = $"Time: {remainingTime}s"; // Начало с 20 секунд
             timerPanel.Controls.Add(timerLabel);
 
             // Панель с кнопками
@@ -106,6 +112,7 @@ namespace FormsSergachevTARpv23
             MainMenuStrip = ms;
             this.Controls.Add(ms);
 
+            
         }
 
         private void Timer_Tick1(object? sender, EventArgs e)
@@ -121,8 +128,61 @@ namespace FormsSergachevTARpv23
             }
         }
 
+        // Остальной код остаётся без изменений...
+
+        private void windowPermissionChange(object sender, EventArgs e)
+        {
+            int w = this.Width;
+            int h = this.Height;
+            var agree = MessageBox.Show("Kas olete kindel, et soovite ekraani suurust muuta?", "Suurus", MessageBoxButtons.YesNo);
+            if (agree == DialogResult.Yes)
+            {
+                string he = Interaction.InputBox("Sisesta kõrgus");
+                if (string.IsNullOrEmpty(he))
+                {
+                    MessageBox.Show("Palun sisesta kõrgus");
+                    return;
+                }
+
+                string wi = Interaction.InputBox("Sisesta laius");
+                if (string.IsNullOrEmpty(wi))
+                {
+                    MessageBox.Show("Palun sisesta kõrgus");
+                    return;
+                }
+
+                if (!int.TryParse(wi, out int width))
+                {
+                    MessageBox.Show("Laius peab olema number");
+                    return;
+                }
+
+                if (!int.TryParse(he, out int height))
+                {
+                    MessageBox.Show("Kõrgus peab olema number");
+                    return;
+                }
+                this.Width = width;
+                this.Height = height;
+                NeljasVorm neljas = new NeljasVorm(w, h);
+                neljas.Show();
+            }
+        }
+
+        private void windowColorMenuClick(object sender, EventArgs e)
+        {
+            ColorDialog cd = new ColorDialog();
+            cd.AllowFullOpen = true;
+
+            if (cd.ShowDialog() == DialogResult.OK)
+            {
+                this.BackColor = cd.Color;
+            }
+        }
+
         private void Button_Click(object sender, EventArgs e)
         {
+
             if (!gameStarted)
             {
                 timer.Start();
@@ -178,7 +238,7 @@ namespace FormsSergachevTARpv23
             else
             {
                 System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-                timer.Interval = 500;
+                timer.Interval = 300;
                 timer.Tick += Timer_Tick;
                 timer.Start();
             }
@@ -204,56 +264,6 @@ namespace FormsSergachevTARpv23
                 var temp = images[i];
                 images[i] = images[j];
                 images[j] = temp;
-            }
-        }
-
-        private void windowPermissionChange(object sender, EventArgs e)
-        {
-            int w = this.Width;
-            int h = this.Height;
-            var agree = MessageBox.Show("Kas olete kindel, et soovite ekraani suurust muuta?", "Suurus", MessageBoxButtons.YesNo);
-            if (agree == DialogResult.Yes)
-            {
-                string he = Interaction.InputBox("Sisesta kõrgus");
-                if (string.IsNullOrEmpty(he))
-                {
-                    MessageBox.Show("Palun sisesta kõrgus");
-                    return;
-                }
-
-                string wi = Interaction.InputBox("Sisesta laius");
-                if (string.IsNullOrEmpty(wi))
-                {
-                    MessageBox.Show("Palun sisesta kõrgus");
-                    return;
-                }
-
-                if (!int.TryParse(wi, out int width))
-                {
-                    MessageBox.Show("Laius peab olema number");
-                    return;
-                }
-
-                if (!int.TryParse(he, out int height))
-                {
-                    MessageBox.Show("Kõrgus peab olema number");
-                    return;
-                }
-                this.Width = width;
-                this.Height = height;
-                NeljasVorm neljas = new NeljasVorm(w, h);
-                neljas.Show();
-            }
-        }
-
-        private void windowColorMenuClick(object sender, EventArgs e)
-        {
-            ColorDialog cd = new ColorDialog();
-            cd.AllowFullOpen = true;
-
-            if (cd.ShowDialog() == DialogResult.OK)
-            {
-                this.BackColor = cd.Color;
             }
         }
     }
