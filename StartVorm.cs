@@ -420,47 +420,14 @@ namespace FormsSergachevTARpv23
             else if (rbtn2.Checked)
             {
                 lbl.Text = "Valik 2 on valitud";
-                int w = 700;
-                int h = 600;
-                var aken = MessageBox.Show("Vali akna suurus", "Kas sa soovite määrata oma akna suurus?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (aken == DialogResult.Yes)
-                {
-                    string wi = Interaction.InputBox("Sisestage akna laius");
-                    if (string.IsNullOrWhiteSpace(wi))
-                    {
-                        MessageBox.Show("Palun sisestage laius");
-                        return;
-
-                    }
-                    string he = Interaction.InputBox("Sisestage akna kõrgus");
-                    if(string.IsNullOrWhiteSpace(he))
-                    {
-                        MessageBox.Show("Palun sisestage kõrgus");
-                        return;
-                    }
-
-                    if (!int.TryParse(wi, out w))
-                    {
-                        MessageBox.Show("Laius peab olema number.");
-                        return;
-
-                    }
-                    if (!int.TryParse(he, out h))
-                    {
-                        MessageBox.Show("Kõrgus peab olema number.");
-                        return;
-                    }
-
-                }
-                KolmasVorm kolmasVorm = new KolmasVorm(w, h);
-                kolmasVorm.Show();
+                
+                StartKolmasForm StartKolmasForm = new StartKolmasForm();
+                StartKolmasForm.Show();
 
             }
             else if (rbtn3.Checked)
             {
                 lbl.Text = "Valik 3 on valitud";
-                int w = 700;
-                int h = 600;
                 
                 StartNeljasForm neljasVorm = new StartNeljasForm();
                 neljasVorm.Show();

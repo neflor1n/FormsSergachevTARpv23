@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace FormsSergachevTARpv23
 {
-    public partial class KolmasVorm : Form
+    public partial class KolmasformNoob : Form
     {
         Random randomizer = new Random();
 
@@ -26,7 +26,7 @@ namespace FormsSergachevTARpv23
         int incorrectAnswers = 0; // Счетчик неправильных ответов
 
         Label correctLabel, incorrectLabel;
-        public KolmasVorm(int w, int h)
+        public KolmasformNoob(int w, int h)
         {
             this.Width = w;
             this.Height = h;
@@ -68,7 +68,7 @@ namespace FormsSergachevTARpv23
 
             correctLabel = new Label();
             incorrectLabel = new Label();
-            
+
 
 
 
@@ -176,11 +176,11 @@ namespace FormsSergachevTARpv23
 
 
 
-            correctLabel.Location = new Point(50, 250); 
+            correctLabel.Location = new Point(50, 250);
             correctLabel.Size = new Size(200, 30);
             correctLabel.Text = "Õiged vastused: 0";
 
-            incorrectLabel.Location = new Point(50, 290); 
+            incorrectLabel.Location = new Point(50, 290);
             incorrectLabel.Size = new Size(200, 30);
             incorrectLabel.Text = "Valed vastused: 0";
 
@@ -218,8 +218,8 @@ namespace FormsSergachevTARpv23
             UpdateAnswerLabels();
 
 
-            timeLeft = 40;
-            timeLabel.Text = "40 seconds";
+            timeLeft = 60;
+            timeLabel.Text = "60 seconds";
             timer1.Interval = 1000;
             timer1.Start();
 
@@ -320,11 +320,11 @@ namespace FormsSergachevTARpv23
 
         private void UpdateAnswerLabels()
         {
-            correctLabel.Text = $"Õiged vastused: {correctAnswers}";
-            incorrectLabel.Text = $"Valed vastused: {incorrectAnswers}";
+            correctLabel.Text = $"Правильные ответы: {correctAnswers}";
+            incorrectLabel.Text = $"Неправильные ответы: {incorrectAnswers}";
         }
 
-       
+
 
 
         private void FinishButton_Click(object sender, EventArgs e)
