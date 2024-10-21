@@ -306,10 +306,18 @@ namespace FormsSergachevTARpv23
             {
                 timer1.Stop();
                 timeLabel.Text = "Aeg on läbi!";
-                MessageBox.Show("Teil ei olnud aega testi täita. Vabandust!");
+                if (CheckTheAnswer())
+                {
+                    MessageBox.Show("Vastasite kõigile küsimustele õigesti!", "Palju õnne!");
+                }
+                else
+                {
+                    MessageBox.Show("On valesid vastuseid.", "Kontrolli oma vastuseid!");
+                }
                 ShowCorrectAnswers();
                 startButton.Enabled = true;
                 finishButton.Enabled = false;
+                timer1.Stop();
             }
 
         }
