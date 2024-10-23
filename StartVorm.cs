@@ -381,7 +381,7 @@ namespace FormsSergachevTARpv23
             if (rbtn1.Checked)
             {
                 lbl.Text = "Valik 1 on valitud";
-                int w = 700;
+                int w = 1100;
                 int h = 600;
 
                 var aken = MessageBox.Show("Vali akna suurus", "Kas sa soovite määrata oma akna suurus?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);

@@ -328,8 +328,8 @@ namespace FormsSergachevTARpv23
 
         private void UpdateAnswerLabels()
         {
-            correctLabel.Text = $"Правильные ответы: {correctAnswers}";
-            incorrectLabel.Text = $"Неправильные ответы: {incorrectAnswers}";
+            correctLabel.Text = $"Õiged vastused: {correctAnswers}";
+            incorrectLabel.Text = $"Väärad vastused: {incorrectAnswers}";
         }
 
 

@@ -23,6 +23,7 @@ namespace FormsSergachevTARpv23
         MenuStrip ms;
         System.Windows.Forms.Timer timer;
         Label timerLabel;
+        ToolStripMenuItem GamePauseAndResume;
         int remainingTime = 40; // Отсчет
         bool gameStarted = false;
 
@@ -106,10 +107,12 @@ namespace FormsSergachevTARpv23
             // Инициализация меню
             ms = new MenuStrip();
             ToolStripMenuItem windowsMenu = new ToolStripMenuItem("Window");
-            ToolStripMenuItem windowColorMenu = new ToolStripMenuItem("Change window color", null, new EventHandler(windowColorMenuClick));
-            ToolStripMenuItem windowAkenSuurus = new ToolStripMenuItem("Change window permission", null, new EventHandler(windowPermissionChange));
+            ToolStripMenuItem windowColorMenu = new ToolStripMenuItem("Akna värvi muutmine", null, new EventHandler(windowColorMenuClick));
+            ToolStripMenuItem windowAkenSuurus = new ToolStripMenuItem("Muuda akna luba", null, new EventHandler(windowPermissionChange));
+            GamePauseAndResume = new ToolStripMenuItem("Mängu pausi seadistamine", null, new EventHandler(PauseAndResume));
             windowsMenu.DropDownItems.Add(windowAkenSuurus);
             windowsMenu.DropDownItems.Add(windowColorMenu);
+            windowsMenu.DropDownItems.Add(GamePauseAndResume);
             ms.Items.Add(windowsMenu);
             ms.Dock = DockStyle.Top;
             MainMenuStrip = ms;
@@ -126,12 +129,45 @@ namespace FormsSergachevTARpv23
             if (remainingTime <= 0)
             {
                 timer.Stop(); // Остановка таймера, если время закончилось
-                MessageBox.Show("Время вышло! Игра окончена.", "Конец игры");
+                MessageBox.Show("Aeg on läbi! Mäng on läbi.", "Mängu lõpp");
                 this.Close(); // Закрываем окно
             }
         }
 
-        // Остальной код остаётся без изменений...
+        private void SetButtonsEnabled(bool enabled)
+        {
+            foreach (Button button in buttons)
+            {
+                button.Enabled = enabled;
+
+            }
+        }
+
+        private void PauseAndResume(object? sender, EventArgs e)
+        {
+            if (gameStarted)
+            {
+
+                if (timer.Enabled)
+                {
+                    timer.Stop();
+                    GamePauseAndResume.Text = "Resume mäng";
+                    SetButtonsEnabled(false);
+                    MessageBox.Show("Mäng peatatud.", "Paus");
+                }
+                else
+                {
+                    timer.Start();
+                    GamePauseAndResume.Text = "Pause mäng";
+                    SetButtonsEnabled(true);
+                    MessageBox.Show("Mäng jätkub.", "Jätkub");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Mäng ei ole veel alanud.", "Viga");
+            }
+        }
 
         private void windowPermissionChange(object sender, EventArgs e)
         {
@@ -167,8 +203,7 @@ namespace FormsSergachevTARpv23
                 }
                 this.Width = width;
                 this.Height = height;
-                NeljasVorm neljas = new NeljasVorm(w, h);
-                neljas.Show();
+                
             }
         }
 

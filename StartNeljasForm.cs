@@ -98,10 +98,11 @@ namespace FormsSergachevTARpv23
 
             else if (rbtn2.Checked)
             {
+
                 int w = 700;
                 int h = 600;
 
-                var aken = MessageBox.Show("Vali akna suurus", "Kas soovite määrata oma akna suuruse?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var aken = MessageBox.Show("Vali akna suurus", "Kas sa soovite määrata oma akna suurus?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (aken == DialogResult.Yes)
                 {
                     string wi = Interaction.InputBox("Sisestage akna laius");
@@ -109,8 +110,8 @@ namespace FormsSergachevTARpv23
                     {
                         MessageBox.Show("Palun sisestage laius");
                         return;
-                    }
 
+                    }
                     string he = Interaction.InputBox("Sisestage akna kõrgus");
                     if (string.IsNullOrWhiteSpace(he))
                     {
@@ -122,17 +123,20 @@ namespace FormsSergachevTARpv23
                     {
                         MessageBox.Show("Laius peab olema number.");
                         return;
-                    }
 
+                    }
                     if (!int.TryParse(he, out h))
                     {
                         MessageBox.Show("Kõrgus peab olema number.");
                         return;
                     }
-                }
 
+
+                }
+                
                 teineGame teineGame = new teineGame(w, h);
                 teineGame.Show();
+
 
             }
 
@@ -141,7 +145,8 @@ namespace FormsSergachevTARpv23
                 int w = 700;
                 int h = 600;
 
-                var aken = MessageBox.Show("Vali akna suurus", "Kas soovite määrata oma akna suuruse?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+                var aken = MessageBox.Show("Vali akna suurus", "Kas sa soovite määrata oma akna suurus?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (aken == DialogResult.Yes)
                 {
                     string wi = Interaction.InputBox("Sisestage akna laius");
@@ -149,8 +154,8 @@ namespace FormsSergachevTARpv23
                     {
                         MessageBox.Show("Palun sisestage laius");
                         return;
-                    }
 
+                    }
                     string he = Interaction.InputBox("Sisestage akna kõrgus");
                     if (string.IsNullOrWhiteSpace(he))
                     {
@@ -162,13 +167,14 @@ namespace FormsSergachevTARpv23
                     {
                         MessageBox.Show("Laius peab olema number.");
                         return;
-                    }
 
+                    }
                     if (!int.TryParse(he, out h))
                     {
                         MessageBox.Show("Kõrgus peab olema number.");
                         return;
                     }
+
                 }
                 NeljasVorm kolmasGame = new NeljasVorm(w, h);
                 kolmasGame.Show();
